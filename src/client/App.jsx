@@ -14,18 +14,30 @@ function App() {
       .then((res) => setMovies(res.data));
   }, []);
 
-  const handleRegister = async (user) => {
+  const handleRegister = async (newUser) => {
     const opts = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(user),
+      body: JSON.stringify(newUser),
     };
     fetch(`${apiUrl}/user/register`, opts)
       .then((res) => res.json())
       .then((createdUser) => console.log(createdUser));
   };
 
-  const handleLogin = async ({ username, password }) => {};
+  const handleLogin = async (loginUser) => {
+    const opts = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(loginUser),
+    };
+    fetch(`${apiUrl}/user/login`, opts)
+      .then((res) => res.json())
+      .then((token) => {
+        console.log(token);
+        localStorage.setItem("token", token.data);
+      });
+  };
 
   const handleCreateMovie = async ({ title, description, runtimeMins }) => {};
 

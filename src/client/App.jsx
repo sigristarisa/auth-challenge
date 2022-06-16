@@ -33,10 +33,7 @@ function App() {
     };
     fetch(`${apiUrl}/user/login`, opts)
       .then((res) => res.json())
-      .then((token) => {
-        console.log(token);
-        localStorage.setItem("token", token.data);
-      });
+      .then((token) => localStorage.setItem("token", token.data));
   };
 
   const handleCreateMovie = async ({ title, description, runtimeMins }) => {};

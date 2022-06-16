@@ -36,7 +36,16 @@ function App() {
       .then((token) => localStorage.setItem("token", token.data));
   };
 
-  const handleCreateMovie = async ({ title, description, runtimeMins }) => {};
+  const handleCreateMovie = async (movie) => {
+    const opts = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(movie),
+    };
+    fetch(`${apiUrl}/movie`, opts)
+      .then((res) => res.json())
+      .then((createdMovie) => setMovies([...movies, createdMovie.data]));
+  };
 
   return (
     <div className="App">

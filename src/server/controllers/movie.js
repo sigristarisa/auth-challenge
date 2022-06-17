@@ -17,22 +17,31 @@ const getAllMovies = async (req, res) => {
   const movies = await prisma.movie.findMany({
     where: {
       users: {
-        id: user.id,
+        some: {
+          id: user.id,
+        },
       },
     },
   });
-
   res.json({ data: movies });
 };
 
 const createMovie = async (req, res) => {
+  const [, token] = req.headers.authorization.split(" ");
   const { title, description, runtimeMins } = req.body;
+
+  const payload = jwt.verify(token, process.env.JWT_SECRET);
 
   const createdMovie = await prisma.movie.create({
     data: {
       title,
       description,
       runtimeMins,
+      users: {
+        connect: {
+          username: payload.username,
+        },
+      },
     },
   });
 

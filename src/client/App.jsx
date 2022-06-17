@@ -4,12 +4,12 @@ import MovieForm from "./components/MovieForm";
 import UserForm from "./components/UserForm";
 
 const apiUrl = "http://localhost:4000";
+const token = localStorage.getItem("token");
 
 function App() {
   const [movies, setMovies] = useState([]);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
     const opts = {
       method: "GET",
       headers: {
@@ -43,7 +43,6 @@ function App() {
     fetch(`${apiUrl}/user/login`, opts)
       .then((res) => res.json())
       .then((token) => {
-        console.log("hi from handleLogin");
         localStorage.setItem("token", token.data);
       });
   };
@@ -51,7 +50,10 @@ function App() {
   const handleCreateMovie = async (movie) => {
     const opts = {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify(movie),
     };
     fetch(`${apiUrl}/movie`, opts)
@@ -60,19 +62,6 @@ function App() {
         setMovies([...movies, createdMovie.data]);
       });
   };
-
-  // const getMovies = async (token) => {
-  //   const opts = {
-  //     method: "GET",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   };
-  //   fetch(`${apiUrl}/movie`)
-  //     .then((res) => res.json())
-  //     .then((movies) => setMovies(movies.data));
-  // };
 
   return (
     <div className="App">

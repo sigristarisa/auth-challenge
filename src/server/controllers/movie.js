@@ -2,10 +2,25 @@ const jwt = require("jsonwebtoken");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-const jwtSecret = "mysecret";
-
 const getAllMovies = async (req, res) => {
-  const movies = await prisma.movie.findMany();
+  const [, token] = req.headers.authorization.split(" ");
+
+  const payload = jwt.verify(token, process.env.JWT_SECRET);
+  console.log("retrieve username: ", payload.username);
+
+  const user = await prisma.user.findFirst({
+    where: {
+      username: payload.username,
+    },
+  });
+
+  const movies = await prisma.movie.findMany({
+    where: {
+      users: {
+        id: user.id,
+      },
+    },
+  });
 
   res.json({ data: movies });
 };

@@ -17,6 +17,7 @@ model User {
   password    String
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
+  movies      Movie[]
 }
 
 model Movie {
@@ -26,4 +27,5 @@ model Movie {
   runtimeMins   Int
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
+  users         User[]
 }

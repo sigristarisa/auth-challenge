@@ -9,7 +9,16 @@ function App() {
   const [movies, setMovies] = useState([]);
 
   useEffect(() => {
-    fetch(`${apiUrl}/movie`)
+    const token = localStorage.getItem("token");
+    const opts = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    fetch(`${apiUrl}/movie`, opts)
       .then((res) => res.json())
       .then((res) => setMovies(res.data));
   }, []);
@@ -33,7 +42,10 @@ function App() {
     };
     fetch(`${apiUrl}/user/login`, opts)
       .then((res) => res.json())
-      .then((token) => localStorage.setItem("token", token.data));
+      .then((token) => {
+        console.log("hi from handleLogin");
+        localStorage.setItem("token", token.data);
+      });
   };
 
   const handleCreateMovie = async (movie) => {
@@ -44,8 +56,23 @@ function App() {
     };
     fetch(`${apiUrl}/movie`, opts)
       .then((res) => res.json())
-      .then((createdMovie) => setMovies([...movies, createdMovie.data]));
+      .then((createdMovie) => {
+        setMovies([...movies, createdMovie.data]);
+      });
   };
+
+  // const getMovies = async (token) => {
+  //   const opts = {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   };
+  //   fetch(`${apiUrl}/movie`)
+  //     .then((res) => res.json())
+  //     .then((movies) => setMovies(movies.data));
+  // };
 
   return (
     <div className="App">
